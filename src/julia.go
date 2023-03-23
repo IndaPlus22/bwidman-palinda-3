@@ -1,6 +1,9 @@
 // Stefan Nilsson 2013-02-27
 
 // This program creates pictures of Julia sets (en.wikipedia.org/wiki/Julia_set).
+
+// Original runtime: 10.09s
+// Improved runtime: 2.53s (CPU has 6 threads)
 package main
 
 import (
@@ -11,6 +14,7 @@ import (
 	"math/cmplx"
 	"os"
 	"strconv"
+	"sync"
 )
 
 type ComplexFunc func(complex128) complex128
@@ -51,15 +55,23 @@ func Julia(f ComplexFunc, n int) image.Image {
 	bounds := image.Rect(-n/2, -n/2, n/2, n/2)
 	img := image.NewRGBA(bounds)
 	s := float64(n / 4)
+	var wg sync.WaitGroup
 	for i := bounds.Min.X; i < bounds.Max.X; i++ {
-		for j := bounds.Min.Y; j < bounds.Max.Y; j++ {
-			n := Iterate(f, complex(float64(i)/s, float64(j)/s), 256)
-			r := uint8(0)
-			g := uint8(0)
-			b := uint8(n % 32 * 8)
-			img.Set(i, j, color.RGBA{r, g, b, 255})
+		for j := bounds.Min.Y; j < bounds.Max.Y; j += n/3 {
+			wg.Add(1)
+			go func(i, j int) {
+				for j2 := j; j2 < j + n/3; j2++ {
+					n := Iterate(f, complex(float64(i)/s, float64(j2)/s), 256)
+					r := uint8(0)
+					g := uint8(0)
+					b := uint8(n % 32 * 8)
+					img.Set(i, j2, color.RGBA{r, g, b, 255})
+				}
+				wg.Done()
+			}(i, j)
 		}
 	}
+	wg.Wait()
 	return img
 }
 
