@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"reflect"
 	"testing"
@@ -51,4 +52,14 @@ func TestWordCountOnLoremIpsum(t *testing.T) {
 		t.Errorf("expected: %v\nactual: %v", expected, actual)
 	}
 
+}
+
+func TestMerge(t *testing.T) {
+	map1 := map[string]int{
+		"a": 5, "b": 2, "c": 1,
+	}
+	map2 := map[string]int{
+		"a": 3, "c": 68, "d": 9,
+	}
+	fmt.Printf("%v", merge(map1, map2))
 }

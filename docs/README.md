@@ -17,3 +17,12 @@ The person that doesn't get a match gets stuck waiting for another goroutine to 
 * What happens if you remove the default-case from the case-statement in the `main` function?
 
 Nothing when there's an odd amount of people as there will always be someone who didn't get matched but if there's an even amount of people, noone is unmatched and the program will arrive at a deadlock waiting for a remaining person in the match channel.
+
+## Task 3
+
+Performances:
+
+|Variant       | Runtime (ms) |
+| ------------ | ------------:|
+| singleworker |          170 |
+| mapreduce    |          163 |
