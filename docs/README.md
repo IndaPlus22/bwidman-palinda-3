@@ -24,5 +24,5 @@ Performances:
 
 |Variant       | Runtime (ms) |
 | ------------ | ------------:|
-| singleworker |          170 |
-| mapreduce    |          163 |
+| singleworker |          776 |
+| mapreduce    |          430 |
